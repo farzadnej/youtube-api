@@ -14,7 +14,61 @@ var UserSchema = new Schema({
     },
    data: {
         type: String
+    },
+    statistics: 
+    [{
+        row: {
+            type: String,
+            required: true
+        },
+        searchTerm: {
+            type: String,
+            default: ""
+        },
+        vidAcceptibility: {
+            type: String,
+           default: ""
+        },
+        vidQuality: {
+            type: String,
+           default: ""
+        },
+        videoUrl: {
+            type: String,
+            default: ""
+        },
+        videoDuration: {
+            type: String,
+            default: ""
+        },
+        vidCompare: {
+          type: String,
+           default: ""
+        },
+        blockAcceptibility: {
+            type: String,
+           default: ""
+        },
+        blockQuality: {
+            type: String,
+           default: ""
+        },
+        sessionAcceptibility: {
+            type: String,
+           default: ""
+        },
+        sessionQuality: {
+            type: String,
+           default: ""
+        },
+
+    date: { 
+        type: Date,
+        default: Date.now
     }
+    
+    }]
+
 });
 
 UserSchema.pre('save', function (next) {

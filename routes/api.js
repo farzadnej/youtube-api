@@ -70,11 +70,41 @@ router.post('/book', passport.authenticate('jwt', { session: false}), function(r
 });
 
 
+
+router.post('/update', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    console.log(req.user);
+    //var eybaba = {row:"5", blockQuestionaire:"5PP",vidQuestionaire:'55PP',SessionQuestionaire:'555'};
+   //User.findOneAndUpdate({_id:req.user._id, "statistics.row": req.body.statistics.row }, {$push: {"statistics.$": req.body.statistics}}, {new: true, upsert: true}, function (err, user) {
+   User.findOneAndUpdate({_id:req.user._id}, {$push: {"statistics": req.body.statistics}}, {new: true, upsert: true}, function (err, user) { 
+        
+        if (err) {
+        return res.json({success: false, msg: 'adding row failed.'});
+      }
+      res.json({success: true, msg: 'Successfully added row.', user: user});
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+
+    });
+
+
+
+
+
+
 router.put('/update', passport.authenticate('jwt', { session: false}), function(req, res) {
   var token = getToken(req.headers);
   if (token) {
     console.log(req.user);
-   User.findByIdAndUpdate(req.user._id, {data: req.body.data}, {new: true}, function (err, user) {
+    //var eybaba = {row:"5", blockQuestionaire:"5PP",vidQuestionaire:'55PP',SessionQuestionaire:'555'};
+   //User.findOneAndUpdate({_id:req.user._id, "statistics.row": req.body.statistics.row }, {$push: {"statistics.$": req.body.statistics}}, {new: true, upsert: true}, function (err, user) {
+   // W User.findOneAndUpdate({_id:req.user._id}, {$push: {"statistics": eybaba}}, {new: true, upsert: true}, function (err, user) { 
+   //working User.findOneAndUpdate({_id:req.user._id, "statistics.row": eybaba.row}, {$set: {"statistics.$.blockQuestionaire": eybaba.blockQuestionaire}}, {new: true, upsert: true}, function (err, user) { 
+    //User.findOneAndUpdate({_id:req.user._id, "statistics.row": eybaba.row}, {$set: {"statistics.$": eybaba}}, {new: true, upsert: true}, function (err, user) {    
+     User.findOneAndUpdate({_id:req.user._id, "statistics.row": req.body.statistics.row}, {$set: {"statistics.$": req.body.statistics}}, {new: true, upsert: true}, function (err, user) {   
         if (err) {
         return res.json({success: false, msg: 'user update failed.'});
       }

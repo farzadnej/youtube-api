@@ -61,6 +61,10 @@ var UserSchema = new Schema({
             type: String,
            default: ""
         },
+        ip: {
+            type: String,
+           default: ""
+        },
 
     date: { 
         type: Date,

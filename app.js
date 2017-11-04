@@ -9,6 +9,9 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var config = require('./config/database');
 
+const requestIp = require('request-ip');
+
+
 mongoose.connect(config.database);
 
 var api = require('./routes/api');
@@ -35,6 +38,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(morgan('dev'));
 app.use(passport.initialize());
+
+//client ip
+app.use(requestIp.mw())
+ 
+
 
 app.get('/', function(req, res) {
   res.send('Page under construction.');

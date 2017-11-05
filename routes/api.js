@@ -8,6 +8,9 @@ var router = express.Router();
 var User = require("../models/user");
 var Book = require("../models/book");
 
+var csv = require('fast-csv');
+var Config = require("../models/config");
+
 router.post('/signup', function(req, res) {
   if (!req.body.username || !req.body.password) {
     res.json({success: false, msg: 'Please pass username and password.'});
@@ -116,6 +119,56 @@ router.put('/update', passport.authenticate('jwt', { session: false}), function(
   }
 
     });
+
+router.post('/config', function(req, res) {
+  if (!req.files)
+    return res.status(400).send('No files were uploaded.');
+  
+  var configFile = req.files.file;
+
+  var configs = [];
+    
+  csv
+   .fromString(configFile.data.toString(), {
+     headers: true,
+     ignoreEmpty: true
+   })
+   .on("data", function(data){
+     data['_id'] = new mongoose.Types.ObjectId();
+     
+     configs.push(data);
+   })
+   .on("end", function(){
+     Config.create(configs, function(err, documents) {
+      if (err) throw err;
+      
+      res.send(configs.length + ' video configs have been successfully uploaded.');
+     });
+   });
+});
+
+
+router.get('/config', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    console.log(req.user);
+    Config.find({"email": req.user.username}, function (err, config) {   
+        if (err) {
+        return res.json({success: false, msg: 'getting config failed.'});
+      }
+      res.json({success: true, msg: 'Successfully got config.', config: config});
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+
+    });
+
+
+
+
+
+
 
 
 router.get('/book', passport.authenticate('jwt', { session: false}), function(req, res) {

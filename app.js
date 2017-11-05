@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var mongoose = require('mongoose');
 var passport = require('passport');
+var fileUpload = require('express-fileupload');
 var config = require('./config/database');
 
 const requestIp = require('request-ip');
@@ -15,6 +16,7 @@ const requestIp = require('request-ip');
 mongoose.connect(config.database);
 
 var api = require('./routes/api');
+var admin = require('./routes/admin');
 
 var app = express();
 
@@ -38,6 +40,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(morgan('dev'));
 app.use(passport.initialize());
+app.use(fileUpload());
 
 //client ip
 app.use(requestIp.mw())
@@ -49,6 +52,7 @@ app.get('/', function(req, res) {
 });
 
 app.use('/api', api);
+app.use('/admin', admin);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

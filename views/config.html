@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Upload Authors</title>
+</head>
+<body>
+	<p>Use the form below to upload the config in csv format.</p>
+	<form action="/api/config" method="POST" encType="multipart/form-data">
+		<input type="file" name="file" accept="*.csv" /><br/><br/>
+		<input type="submit" value="Upload config" />
+	</form>
+</body>
+</html>

@@ -18,6 +18,7 @@ router.get('/config', function(req, res, next) {
 
 router.get('/stats', function(req, res, next) {
 	//res.sendFile('../views/config.html' , { root : __dirname});
+	fse.emptyDirSync('temp/csvexport');
 	res.sendFile(path.join(__dirname, '../views', 'stats.html'));
 });
 
@@ -30,7 +31,7 @@ router.get('/csvfiles', function(req, res, next) {
 })*/
 
 
-
+    
 	var fields = [
 		'row',
 		'searchTerm',
@@ -75,11 +76,7 @@ router.get('/csvfiles', function(req, res, next) {
 
 	  var csv = json2csv({ data: stats, fields: fields });
 	  const fileam = 'temp/csvexport/'+user[0].username +'.csv';
-	  fse.outputFile(fileam, csv, err => {
-	  console.log(err) // => null
-	  console.log('file save',user[0].username + ' saved');
-
-	});
+	  fse.outputFileSync(fileam, csv);
 
 	  //res.set("Content-Disposition", "attachment;filename="+username+".csv");
 	  //res.set("Content-Type", "application/octet-stream");
@@ -87,10 +84,12 @@ router.get('/csvfiles', function(req, res, next) {
     });
 
            }
-        }
-);
 
-    res.zip({
+          setTimeout(zipFiles, 5000);
+
+          function zipFiles(){
+
+          	res.zip({
         files: [
             { content: 'These files are stats for different users',      //options can refer to [http://archiverjs.com/zip-stream/ZipStream.html#entry](http://archiverjs.com/zip-stream/ZipStream.html#entry) 
                  name: 'meta',
@@ -102,46 +101,11 @@ router.get('/csvfiles', function(req, res, next) {
         ],
         filename: 'stats.zip'
     });
+          }
 
 
-
-
-
-
-	
-
-
-	var example =
-    [ { 'searchTerm': 'video',
-    'vidAcceptibility': '1',
-    'vidQuality': '3',
-    'videoUrl': 'https://www.youtube.com/watch?v=8tLopqeL9s8',
-    'videoDuration': '84',
-    'vidCompare': '1',
-    'blockAcceptibility': '',
-    'blockQuality': '',
-    'sessionAcceptibility': '',
-    'sessionQuality': '',
-    'ip': '',
-    'date': '2017-11-05T20:37:02.156Z',
-    '_id': '59ff766ee397fb9241516426',
-    'row': '1' },
-  { 'searchTerm': '',
-    'vidAcceptibility': '',
-    'vidQuality': '',
-    'videoUrl': '',
-    'videoDuration': '',
-    'vidCompare': '',
-    'blockAcceptibility': '',
-    'blockQuality': '',
-    'sessionAcceptibility': '',
-    'sessionQuality': '',
-    'ip': '',
-    'date': '2017-11-05T20:37:02.166Z',
-    '_id': '59ff766ee397fb9241516427',
-    'row': '2' }
-  
-  ];
+        }
+);
     
 	
 });

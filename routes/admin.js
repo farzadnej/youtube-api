@@ -5,8 +5,8 @@ var path = require('path');
 var json2csv = require('json2csv');
 var User = require("../models/user");
 
-var zip = require('express-easy-zip');
-var fs = require('fs'); 
+var fse = require('fs-extra'); 
+var mkdirp = require('mkdirp');
 
 
 
@@ -22,6 +22,14 @@ router.get('/stats', function(req, res, next) {
 });
 
 router.get('/csvfiles', function(req, res, next) {
+
+	/*const dir = '/temp/csvexport'
+	fse.ensureDir(dir, err => {
+	console.log(err) // => null
+  // dir has now been created, including the directory it is to be placed in
+})*/
+
+
 
 	var fields = [
 		'row',
@@ -66,24 +74,34 @@ router.get('/csvfiles', function(req, res, next) {
     
 
 	  var csv = json2csv({ data: stats, fields: fields });
-	  fs.writeFile('/temp/csvexport/'+user[0].username +'.csv', csv, function(err) {
-	  	if (err) throw err;
-	  	console.log('file save',user[0].username + ' saved');
-	  });
+	  const fileam = 'temp/csvexport/'+user[0].username +'.csv';
+	  fse.outputFile(fileam, csv, err => {
+	  console.log(err) // => null
+	  console.log('file save',user[0].username + ' saved');
+
+	});
 
 	  //res.set("Content-Disposition", "attachment;filename="+username+".csv");
 	  //res.set("Content-Type", "application/octet-stream");
 	  //res.send(csv);
     });
 
-
-
-
            }
         }
 );
 
-
+    res.zip({
+        files: [
+            { content: 'These files are stats for different users',      //options can refer to [http://archiverjs.com/zip-stream/ZipStream.html#entry](http://archiverjs.com/zip-stream/ZipStream.html#entry) 
+                 name: 'meta',
+                 mode: 0755,
+              comment: 'commentsForStat',
+                 date: new Date(),
+                 type: 'file' },
+            { path: path.join(__dirname, '/../temp/csvexport'), name: 'csvexport' }    //or a folder 
+        ],
+        filename: 'stats.zip'
+    });
 
 
 

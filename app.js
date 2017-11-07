@@ -9,6 +9,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var fileUpload = require('express-fileupload');
 var config = require('./config/database');
+var zip = require('express-easy-zip');
 
 const requestIp = require('request-ip');
 
@@ -44,6 +45,7 @@ app.use(fileUpload());
 
 //client ip
 app.use(requestIp.mw())
+app.use(zip());
  
 
 

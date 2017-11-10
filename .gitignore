@@ -39,6 +39,9 @@ build/Release
 node_modules/
 jspm_packages/
 
+#config directory
+/temp
+
 # Typescript v1 declaration files
 typings/
 

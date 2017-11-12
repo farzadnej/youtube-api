@@ -11,6 +11,7 @@ var Book = require("../models/book");
 var csv = require('fast-csv');
 var Config = require("../models/config");
 
+
 router.post('/signup', function(req, res) {
   if (!req.body.username || !req.body.password) {
     res.json({success: false, msg: 'Please pass username and password.'});
@@ -75,7 +76,7 @@ router.post('/book', passport.authenticate('jwt', { session: false}), function(r
 
 
 
-router.post('/update', passport.authenticate('jwt', { session: false}), function(req, res) {
+router.post('/updateold', passport.authenticate('jwt', { session: false}), function(req, res) {
   var token = getToken(req.headers);
   if (token) {
     console.log(req.user);
@@ -99,7 +100,7 @@ router.post('/update', passport.authenticate('jwt', { session: false}), function
 
 
 
-router.put('/update', passport.authenticate('jwt', { session: false}), function(req, res) {
+router.put('/updateold', passport.authenticate('jwt', { session: false}), function(req, res) {
   var token = getToken(req.headers);
   if (token) {
     console.log(req.user);
@@ -114,6 +115,54 @@ router.put('/update', passport.authenticate('jwt', { session: false}), function(
       }
       res.json({success: true, msg: 'Successfully updated user.', user: user});
     });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+
+    });
+
+
+router.post('/update', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    console.log(req.user);
+    User.findOne({_id:req.body._id, "statistics.row": req.body.statistics.row}, {"statistics.row.$": true}, function (err, first) { 
+        if (err) {
+        return res.json({success: false, msg: 'user update failed.'});
+      }
+      if (first != null){
+        temp = first.statistics;
+        bufferAlaki = temp[0];
+        buffer = Object.assign(bufferAlaki.toObject(),req.body.statistics);
+        User.findOneAndUpdate({_id:req.body._id, "statistics.row": req.body.statistics.row}, {$set: {"statistics.$": buffer}}, {new: true, upsert: true}, function (err, second) {   
+        if (err) {
+        return res.json({success: false, msg: 'user update failed.'});
+      }
+      res.json({success: true, msg: 'Successfully updated user.', second: second});
+    });
+
+      } else{
+        buffer = Object.assign({},req.body.statistics);
+        User.findOneAndUpdate({_id:req.body._id}, {$push: {"statistics": req.body.statistics}}, {new: true, upsert: true}, function (err, newRow) { 
+        
+        if (err) {
+        return res.json({success: false, msg: 'adding row failed.'});
+      }
+      hala = Object.assign({},newRow.toObject());
+      res.json({success: true, msg: 'Successfully added row.', newRow: hala});
+    });
+
+      }
+      });
+      //buffer.searchTerm = req.body.statistics.searchTerm;
+      /*Object.keys(req.body.statistics).forEach(function(key) {
+        var reqHolder = req.body.statistics;
+        if (reqHolder[key] !== null) {
+          buffer[key] = reqHolder[key];
+        }
+      });*/
+    
+     
   } else {
     return res.status(403).send({success: false, msg: 'Unauthorized.'});
   }

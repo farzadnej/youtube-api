@@ -126,7 +126,7 @@ router.post('/update', passport.authenticate('jwt', { session: false}), function
   var token = getToken(req.headers);
   if (token) {
     console.log(req.user);
-    User.findOne({_id:req.body._id, "statistics.row": req.body.statistics.row}, {"statistics.row.$": true}, function (err, first) { 
+    User.findOne({_id:req.user._id, "statistics.row": req.body.statistics.row}, {"statistics.row.$": true}, function (err, first) { 
         if (err) {
         return res.json({success: false, msg: 'user update failed.'});
       }
@@ -134,7 +134,7 @@ router.post('/update', passport.authenticate('jwt', { session: false}), function
         temp = first.statistics;
         bufferAlaki = temp[0];
         buffer = Object.assign(bufferAlaki.toObject(),req.body.statistics);
-        User.findOneAndUpdate({_id:req.body._id, "statistics.row": req.body.statistics.row}, {$set: {"statistics.$": buffer}}, {new: true, upsert: true}, function (err, second) {   
+        User.findOneAndUpdate({_id:req.user._id, "statistics.row": req.body.statistics.row}, {$set: {"statistics.$": buffer}}, {new: true, upsert: true}, function (err, second) {   
         if (err) {
         return res.json({success: false, msg: 'user update failed.'});
       }
@@ -143,7 +143,7 @@ router.post('/update', passport.authenticate('jwt', { session: false}), function
 
       } else{
         buffer = Object.assign({},req.body.statistics);
-        User.findOneAndUpdate({_id:req.body._id}, {$push: {"statistics": req.body.statistics}}, {new: true, upsert: true}, function (err, newRow) { 
+        User.findOneAndUpdate({_id:req.user._id}, {$push: {"statistics": req.body.statistics}}, {new: true, upsert: true}, function (err, newRow) { 
         
         if (err) {
         return res.json({success: false, msg: 'adding row failed.'});

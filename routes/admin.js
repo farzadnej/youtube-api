@@ -33,19 +33,23 @@ router.get('/csvfiles', function(req, res, next) {
 
     
 	var fields = [
-		'row',
-		'searchTerm',
-        'vidAcceptibility',
-        'vidQuality',
-        'videoUrl',
-        'videoDuration',
-        'vidCompare',
-        'blockAcceptibility',
-        'blockQuality',
-        'sessionAcceptibility',
-        'sessionQuality',
-        'ip',
-        'date'
+  'row',
+  'searchTerm',
+  'vidAcceptibility',
+  'videoUrl',
+  'videoDuration',
+  'q300Acceptibility',
+  'q300Quality',
+  'q300Compare',
+  'q301Acceptibility',
+  'q301Quality',
+  'q301Compare',
+  'blockAcceptibility',
+  'blockQuality',
+  'sessionAcceptibility',
+  'sessionQuality',
+  'ip',
+  'date'
 	];
 	var stats = '';
 

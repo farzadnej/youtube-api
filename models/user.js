@@ -25,12 +25,28 @@ var UserSchema = new Schema({
             type: String,
             default: ""
         },
-        vidAcceptibility: {
+        q300Acceptibility: {
             type: String,
            default: ""
         },
-        vidQuality: {
+        q300Quality: {
             type: String,
+           default: ""
+        },
+         q300Compare: {
+          type: String,
+           default: ""
+        },
+        q301Acceptibility: {
+            type: String,
+           default: ""
+        },
+        q301Quality: {
+            type: String,
+           default: ""
+        },
+         q301Compare: {
+          type: String,
            default: ""
         },
         videoUrl: {
@@ -40,10 +56,6 @@ var UserSchema = new Schema({
         videoDuration: {
             type: String,
             default: ""
-        },
-        vidCompare: {
-          type: String,
-           default: ""
         },
         blockAcceptibility: {
             type: String,

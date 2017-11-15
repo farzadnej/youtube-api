@@ -34,9 +34,12 @@ router.get('/csvfiles', function(req, res, next) {
     
 	var fields = [
   'row',
+  'userID',
+  'email',
+  'session',
+  'video',
   'time',
   'searchTerm',
-  'vidAcceptibility',
   'videoUrl',
   'videoDuration',
   'q300Acceptibility',
@@ -66,21 +69,22 @@ router.get('/csvfiles', function(req, res, next) {
         }
         }
     ],  function(err,results) {
-    	console.log('aggregated',results);
+    	//console.log('aggregated',results);
            // Process results
 
            for(var usn of results[0].all) {
      
-           	console.log('loop',usn);
+           	//console.log('loop',usn);
 
            	User.find({username:usn}, function (err, user) { 
-           		console.log('user',usn);
+           		//console.log('user',usn);
         
         if (err) {
         return res.json({success: false, msg: 'could not read user database.'});
       }
 
       stats = user[0].statistics;
+      //console.log(stats);
     
 
 	  var csv = json2csv({ data: stats, fields: fields });

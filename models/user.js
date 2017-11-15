@@ -21,6 +21,22 @@ var UserSchema = new Schema({
             type: String,
             required: true
         },
+        userID: {
+            type: String,
+            default: ""
+        },
+        email: {
+            type: String,
+            default: ""
+        },
+        session: {
+            type: String,
+            default: ""
+        },
+        video: {
+            type: String,
+            default: ""
+        },
         time: {
             type: String,
             default: ""

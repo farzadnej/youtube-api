@@ -45,6 +45,10 @@ var UserSchema = new Schema({
             type: String,
             default: ""
         },
+        quality: {
+            type: String,
+            default: ""
+        },
         q300Acceptibility: {
             type: String,
            default: ""

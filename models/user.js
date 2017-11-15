@@ -21,6 +21,10 @@ var UserSchema = new Schema({
             type: String,
             required: true
         },
+        time: {
+            type: String,
+            default: ""
+        },
         searchTerm: {
             type: String,
             default: ""
@@ -37,6 +41,10 @@ var UserSchema = new Schema({
           type: String,
            default: ""
         },
+        q300Duration: {
+            type: String,
+           default: ""
+        },
         q301Acceptibility: {
             type: String,
            default: ""
@@ -47,6 +55,10 @@ var UserSchema = new Schema({
         },
          q301Compare: {
           type: String,
+           default: ""
+        },
+        q301Duration: {
+            type: String,
            default: ""
         },
         videoUrl: {
@@ -65,6 +77,10 @@ var UserSchema = new Schema({
             type: String,
            default: ""
         },
+        blockqDuration: {
+            type: String,
+           default: ""
+        },
         sessionAcceptibility: {
             type: String,
            default: ""
@@ -73,14 +89,17 @@ var UserSchema = new Schema({
             type: String,
            default: ""
         },
+        sessionqDuration: {
+            type: String,
+           default: ""
+        },
         ip: {
             type: String,
            default: ""
         },
-
-    date: { 
-        type: Date,
-        default: Date.now
+        date: { 
+            type: Date,
+            default: Date.now
     }
     
     }]

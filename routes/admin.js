@@ -34,6 +34,7 @@ router.get('/csvfiles', function(req, res, next) {
     
 	var fields = [
   'row',
+  'time',
   'searchTerm',
   'vidAcceptibility',
   'videoUrl',
@@ -41,13 +42,17 @@ router.get('/csvfiles', function(req, res, next) {
   'q300Acceptibility',
   'q300Quality',
   'q300Compare',
+  'q300Duration',
   'q301Acceptibility',
   'q301Quality',
   'q301Compare',
+  'q301Duration',
   'blockAcceptibility',
   'blockQuality',
+  'blockqDuration',
   'sessionAcceptibility',
   'sessionQuality',
+  'sessionqDuration',
   'ip',
   'date'
 	];

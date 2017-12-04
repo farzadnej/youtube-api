@@ -12,6 +12,11 @@ var UserSchema = new Schema({
         type: String,
         required: true
     },
+  phase: {
+        type: String,
+        required: true,
+        default: "1"
+    },
    data: {
         type: String
     },

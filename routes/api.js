@@ -169,6 +169,56 @@ router.post('/update', passport.authenticate('jwt', { session: false}), function
 
     });
 
+
+
+
+router.post('/updatePhase', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    console.log(req.user);
+    User.findOneAndUpdate({_id:req.user._id}, {$set:{phase:req.body.phase}},function (err, user) { 
+        if (err) {
+        return res.json({success: false, msg: 'user update failed.'});
+      }
+      if (user != null){
+        //user.phase = req.body.phase;
+        res.json({success: true, msg: 'Successfully updated user.', phase: user.phase});
+    } 
+  });
+  }
+  else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+
+    });
+
+
+router.get('/getPhase', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    console.log('phase');
+    User.findOne({_id:req.user._id}, function (err, user) { 
+        if (err) {
+          console.log('phase1');
+        return res.json({success: false, msg: 'user phase getting failed.'});
+      }
+      if (user != null){
+        console.log('phase2');
+        res.json({success: true, msg: 'Successfully got phase.', phase: user.phase});
+    } 
+  });
+  }
+  else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+
+    });
+
+
+
+
+
+
 router.post('/config', function(req, res) {
   if (!req.files)
     return res.status(400).send('No files were uploaded.');

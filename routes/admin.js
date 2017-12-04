@@ -40,6 +40,8 @@ router.get('/csvfiles', function(req, res, next) {
   'video',
   'time',
   'searchTerm',
+  'nextTime',
+  'submitTime',
   'quality',
   'videoUrl',
   'videoDuration',

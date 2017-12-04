@@ -50,6 +50,14 @@ var UserSchema = new Schema({
             type: String,
             default: ""
         },
+        nextTime: {
+            type: String,
+            default: ""
+        },
+        submitTime: {
+            type: String,
+            default: ""
+        },
         quality: {
             type: String,
             default: ""

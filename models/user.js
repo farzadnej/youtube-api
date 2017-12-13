@@ -58,6 +58,10 @@ var UserSchema = new Schema({
             type: String,
             default: ""
         },
+        focusedUser: {
+            type: String,
+            default: ""
+        },
         quality: {
             type: String,
             default: ""

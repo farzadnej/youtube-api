@@ -13,6 +13,7 @@ var Config = require("../models/config");
 
 'use strict';
 const nodemailer = require('nodemailer');
+var bcrypt = require('bcrypt-nodejs');
 
 
 router.post('/signup', function(req, res) {
@@ -56,6 +57,56 @@ router.post('/signin', function(req, res) {
       });
     }
   });
+});
+
+
+
+
+
+
+router.post('/resetpass', function(req, res) {
+  var randID = Math.random().toString();
+  User.findOneAndUpdate({username:req.body.username}, {$set:{randID: randID}},function (err, user) { 
+        if (err) {
+        return res.json({success: false, msg: 'pass reset failed.'});
+      }
+      if (user != null){
+        
+        //user.phase = req.body.phase;
+        sendResetEmail(randID, req.body.username);
+        res.json({success: true, msg: 'Successfully reset password.', password: randID});
+    } else {
+      res.json({success: false, msg: 'Not allowed to reset password.'});
+    }
+  });
+            });
+
+router.post('/updatepass', function(req, res) {
+ 
+
+  bcrypt.genSalt(10, function (err, salt) {
+            if (err) {
+                return res.json({success: false, msg: 'error creating salt.'});
+            }
+            bcrypt.hash(req.body.password, salt, null, function (err, hash) {
+                if (err) {
+                    return res.json({success: false, msg: 'error creating hash.'});
+                }
+                User.findOneAndUpdate({username:req.body.username, randID: req.body.randID}, {$set:{password:hash}},function (err, user) { 
+        if (err) {
+        return res.json({success: false, msg: 'user pass update failed.'});
+      }
+      if (user != null){
+        
+        //user.phase = req.body.phase;
+        res.json({success: true, msg: 'Successfully updated user password.', password: hash});
+    } else {
+      res.json({success: false, msg: 'Not allowed to change password.'});
+    }
+  });
+            });
+        });
+
 });
 
 router.post('/book', passport.authenticate('jwt', { session: false}), function(req, res) {
@@ -329,6 +380,52 @@ router.get('/book', passport.authenticate('jwt', { session: false}), function(re
     return res.status(403).send({success: false, msg: 'Unauthorized.'});
   }
 });
+
+
+
+sendResetEmail = function(randID, to) {
+
+
+// Generate test SMTP service account from ethereal.email
+// Only needed if you don't have a real mail account for testing
+nodemailer.createTestAccount((err, account) => {
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+ service: 'gmail',
+ auth: {
+        user: 'peter.hartoo17@gmail.com',
+        pass: 'qwertyuiop9'
+    }
+});
+
+    // setup email data with unicode symbols
+    let mailOptions = {
+        from: '"Crowd Sourcing" <peter.hartoo17@gmail.com>', // sender address
+        to: to, // list of receivers
+        subject: 'CrowdSourcing Password Reset', // Subject line
+        text: 'Click:' + 'http://localhost:4200/password-update/'+ randID.toString(), // plain text body
+        html: 'Click the link to reset your password: <br>  <a href=' +
+        'http://localhost:4200/password-update/'+ randID + '>password reset link</a> <br>  <b>Thanks</b>'// html body
+    };
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+        }
+        console.log('Message sent: %s', info.messageId);
+        // Preview only available when sending through an Ethereal account
+        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
+        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@blurdybloop.com>
+        // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+    });
+});
+};
+
+
+
 
 getToken = function (headers) {
   if (headers && headers.authorization) {

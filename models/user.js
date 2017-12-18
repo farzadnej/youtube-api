@@ -12,6 +12,11 @@ var UserSchema = new Schema({
         type: String,
         required: true
     },
+    randID: {
+        type: String,
+        default: "1"
+    },
+
   phase: {
         type: String,
         required: true,

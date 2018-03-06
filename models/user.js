@@ -142,7 +142,139 @@ var UserSchema = new Schema({
         date: { 
             type: Date,
             default: Date.now
-    }
+    },
+        videoQ1: {
+            type: String,
+           default: ""
+        },
+        videoQ2: {
+            type: String,
+           default: ""
+        },
+        videoQ3: {
+          type: String,
+           default: ""
+        },
+        videoQ4: {
+          type: String,
+           default: ""
+        },
+        videoQ5: {
+          type: String,
+           default: ""
+        },
+        videoQ6: {
+          type: String,
+           default: ""
+        },
+        videoQ7: {
+          type: String,
+           default: ""
+        },
+        videoQ8: {
+          type: String,
+           default: ""
+        },
+        videoQ9: {
+          type: String,
+           default: ""
+        },
+        videoQ10: {
+          type: String,
+           default: ""
+        },
+        videoQduration: {
+            type: String,
+           default: ""
+        },
+        blockQ1: {
+            type: String,
+           default: ""
+        },
+        blockQ2: {
+            type: String,
+           default: ""
+        },
+        blockQ3: {
+          type: String,
+           default: ""
+        },
+        blockQ4: {
+          type: String,
+           default: ""
+        },
+        blockQ5: {
+          type: String,
+           default: ""
+        },
+        blockQ6: {
+          type: String,
+           default: ""
+        },
+        blockQ7: {
+          type: String,
+           default: ""
+        },
+        blockQ8: {
+          type: String,
+           default: ""
+        },
+        blockQ9: {
+          type: String,
+           default: ""
+        },
+        blockQ10: {
+          type: String,
+           default: ""
+        },
+        blockQduration: {
+            type: String,
+           default: ""
+        },
+        sessionQ1: {
+            type: String,
+           default: ""
+        },
+        sessionQ2: {
+            type: String,
+           default: ""
+        },
+        sessionQ3: {
+          type: String,
+           default: ""
+        },
+        sessionQ4: {
+          type: String,
+           default: ""
+        },
+        sessionQ5: {
+          type: String,
+           default: ""
+        },
+        sessionQ6: {
+          type: String,
+           default: ""
+        },
+        sessionQ7: {
+          type: String,
+           default: ""
+        },
+        sessionQ8: {
+          type: String,
+           default: ""
+        },
+        sessionQ9: {
+          type: String,
+           default: ""
+        },
+        sessionQ10: {
+          type: String,
+           default: ""
+        },
+        sessionQduration: {
+            type: String,
+           default: ""
+        }
     
     }]
 

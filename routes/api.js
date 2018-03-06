@@ -10,6 +10,7 @@ var Book = require("../models/book");
 
 var csv = require('fast-csv');
 var Config = require("../models/config");
+var Questionaire = require("../models/questionaire");
 
 'use strict';
 const nodemailer = require('nodemailer');
@@ -317,6 +318,63 @@ router.get('/config', passport.authenticate('jwt', { session: false}), function(
 
     });
 
+
+
+
+router.post('/questionaire', function(req, res) {
+  if (!req.files)
+    return res.status(400).send('No files were uploaded.');
+  
+  var questionFile = req.files.file;
+
+  var questions = [];
+    
+  csv
+   .fromString(questionFile.data.toString(), {
+     headers: true,
+     ignoreEmpty: true
+   })
+   .on("data", function(data){
+     data['_id'] = new mongoose.Types.ObjectId();
+     
+     questions.push(data);
+   })
+   .on("end", function(){
+     Questionaire.create(questions, function(err, documents) {
+      if (err) throw err;
+      
+      res.send(questions.length + ' questionaire has been successfully uploaded.');
+     });
+   });
+});
+
+
+router.get('/questionaire', passport.authenticate('jwt', { session: false}),function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    //console.log(req);
+    console.log(req.query.qType);
+    Questionaire.find({"qType":req.query.qType}, function (err, questionaires) {   
+        if (err) {
+        return res.json({success: false, msg: 'getting questionaires failed.'});
+      }
+      res.json({success: true, msg: 'Successfully got questionaires.', questionaires: questionaires});
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+
+    });
+
+
+
+
+/*router.get('/questionaire', function(req, res) {
+  
+    console.log(req);
+    //console.log(req.user.qType);
+    
+    });*/
 
 
 router.get('/reset', function(req, res) {

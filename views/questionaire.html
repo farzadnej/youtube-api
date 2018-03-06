@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Upload Questionaires as CSV files</title>
+</head>
+<body>
+	<p>Use the form below to upload questionaires in csv format.</p>
+	<form action="/api/questionaire" method="POST" encType="multipart/form-data">
+		<input type="file" name="file" accept="*.csv" /><br/><br/>
+		<input type="submit" value="Upload questionaire" />
+	</form>
+</body>
+</html>

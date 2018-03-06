@@ -16,6 +16,10 @@ router.get('/config', function(req, res, next) {
 	res.sendFile(path.join(__dirname, '../views', 'config.html'));
 });
 
+router.get('/questionaire', function(req, res, next) {
+  res.sendFile(path.join(__dirname, '../views', 'questionaire.html'));
+});
+
 router.get('/stats', function(req, res, next) {
 	//res.sendFile('../views/config.html' , { root : __dirname});
 	fse.emptyDirSync('temp/csvexport');
@@ -46,20 +50,39 @@ router.get('/csvfiles', function(req, res, next) {
   'quality',
   'videoUrl',
   'videoDuration',
-  'q300Acceptibility',
-  'q300Quality',
-  'q300Compare',
-  'q300Duration',
-  'q301Acceptibility',
-  'q301Quality',
-  'q301Compare',
-  'q301Duration',
-  'blockAcceptibility',
-  'blockQuality',
-  'blockqDuration',
-  'sessionAcceptibility',
-  'sessionQuality',
-  'sessionqDuration',
+  'videoQ1',
+  'videoQ2',
+  'videoQ3',
+  'videoQ4',
+  'videoQ5',
+  'videoQ6',
+  'videoQ7',
+  'videoQ8',
+  'videoQ9',
+  'videoQ10',
+  'videoQduration',
+  'blockQ1',
+  'blockQ2',
+  'blockQ3',
+  'blockQ4',
+  'blockQ5',
+  'blockQ6',
+  'blockQ7',
+  'blockQ8',
+  'blockQ9',
+  'blockQ10',
+  'blockQduration',
+  'sessionQ1',
+  'sessionQ2',
+  'sessionQ3',
+  'sessionQ4',
+  'sessionQ5',
+  'sessionQ6',
+  'sessionQ7',
+  'sessionQ8',
+  'sessionQ9',
+  'sessionQ10',
+  'sessionQduration',
   'ip',
   'date'
 	];

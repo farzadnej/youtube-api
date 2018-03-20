@@ -8,6 +8,9 @@ var configSchema = mongoose.Schema({
 	email: {
 		type: String,
 	},
+	experimentStart: {
+		type: String,
+	},
 	seqNo: {
 		type: String,
 	},

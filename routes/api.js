@@ -21,17 +21,31 @@ router.post('/signup', function(req, res) {
   if (!req.body.username || !req.body.password) {
     res.json({success: false, msg: 'Please pass username and password.'});
   } else {
-    var newUser = new User({
+    
+
+     Config.find({"email": req.body.username}, function (err, config) {   
+        if (err) {
+        return res.json({success: false, msg: 'getting config failed when signing up.'});
+      }
+
+      var newUser = new User({
       username: req.body.username,
-      password: req.body.password
+      password: req.body.password,
+      experimentStart:config[0]['experimentStart']
     });
-    // save the user
-    newUser.save(function(err) {
+
+      newUser.save(function(err) {
       if (err) {
         return res.json({success: false, msg: 'Username already exists.'});
       }
-      res.json({success: true, msg: 'Successful created new user.'});
+      res.json({success: true, msg: 'Successful created new user.', config: config});
     });
+
+    });
+
+    
+
+
   }
 });
 
@@ -48,10 +62,26 @@ router.post('/signin', function(req, res) {
       // check if password matches
       user.comparePassword(req.body.password, function (err, isMatch) {
         if (isMatch && !err) {
-          // if user is found and password is right create a token
-          var token = jwt.sign(user, config.secret);
-          // return the information including token as JSON
-          res.json({success: true, token: 'JWT ' + token, ip: req.clientIp});
+          if (user.isInactive) {
+            res.status(401).send({success: false, msg: 'Did not comply with 3 sessions.'});
+
+          } else if (user.sessionTimes && new Date() - user.sessionTimes[user.sessionTimes.length -1] < 1000 * 24 * 60 * 60){
+            res.status(401).send({success: false, msg: 'Not enough time passed.'});
+          } else if (user.sessionTimes &&  
+            user.sessionTimes.length >= (Math.floor((new Date() - new Date(user.experimentStart +'T00:00:01')) / (1000 * 60 * 60 * 24 * 7)) + 1) * 3 ) {
+
+            res.status(401).send({success: false, msg: 'More than 3 sessions/week not allowed.'});
+
+          } else {
+            // if user is found and password is right create a token
+            var token = jwt.sign(user, config.secret);
+            // return the information including token as JSON
+            res.json({success: true, token: 'JWT ' + token, ip: req.clientIp});
+            
+          }
+
+
+          
         } else {
           res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
         }
@@ -231,7 +261,7 @@ router.post('/updatePhase', passport.authenticate('jwt', { session: false}), fun
   var token = getToken(req.headers);
   if (token) {
     console.log(req.user);
-    User.findOneAndUpdate({_id:req.user._id}, {$set:{phase:req.body.phase}},function (err, user) { 
+    User.findOneAndUpdate({_id:req.user._id}, {$set:{phase:req.body.phase}, $push: {sessionTimes: new Date() }},function (err, user) { 
         if (err) {
         return res.json({success: false, msg: 'user update failed.'});
       }

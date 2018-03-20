@@ -276,7 +276,19 @@ var UserSchema = new Schema({
            default: ""
         }
     
-    }]
+    }],
+    sessionTimes: [ Date ],
+
+    isInactive: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    experimentStart:{
+      type: String,
+      required: true
+    }
+
 
 });
 

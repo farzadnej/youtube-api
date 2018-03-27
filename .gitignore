@@ -41,7 +41,8 @@ jspm_packages/
 
 #config directory
 /temp
-
+#prod directory
+/dist
 # Typescript v1 declaration files
 typings/
 

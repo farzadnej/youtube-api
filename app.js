@@ -40,7 +40,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(path.join(__dirname, 'public')));
 app.use(morgan('dev'));
 app.use(passport.initialize());
 app.use(fileUpload());
@@ -51,12 +51,20 @@ app.use(zip());
  
 
 
-app.get('/', function(req, res) {
+/*app.get('/', function(req, res) {
   res.send('Page under construction.');
 });
-
+*/
 app.use('/api', api);
 app.use('/admin', admin);
+
+
+app.use(express.static(path.join(__dirname, 'dist')));
+// Catch all other routes and return the index file
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/index.html'));
+});
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

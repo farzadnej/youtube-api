@@ -425,7 +425,7 @@ nodemailer.createTestAccount((err, account) => {
 
     // setup email data with unicode symbols
     let mailOptions = {
-        from: '"Please" <farzad85@yahoo.com>', // sender address
+        from: '"Please" ', // sender address
         to: 'farzadn2i@yahoo.com', // list of receivers
         subject: 'time ✔', // Subject line
         text: 'HWhere are you?', // plain text body
@@ -494,7 +494,7 @@ nodemailer.createTestAccount((err, account) => {
         subject: 'CrowdSourcing Password Reset', // Subject line
         text: 'Click:' + 'http://localhost:4200/password-update/'+ randID.toString(), // plain text body
         html: 'Click the link to reset your password: <br>  <a href=' +
-        'http://localhost:4200/password-update/'+ randID + '>password reset link</a> <br>  <b>Thanks</b>'// html body
+        'http://www.imlresearch.com/password-update/'+ randID + '>password reset link</a> <br>  <b>Thanks</b>'// html body
     };
 
     // send mail with defined transport object

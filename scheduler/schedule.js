@@ -10,10 +10,7 @@ let transporter = nodemailer.createTransport({
     }
 });
 
- 
-var j = schedule.scheduleJob('*/25 * * * * *', function(){
-  console.log('The answer to life, the universe, and everything!');
-});
+
 
 var monday = schedule.scheduleJob('0 0 6 * * 1', function(){
   console.log('Monday, 6AM!');

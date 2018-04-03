@@ -25,8 +25,12 @@ router.post('/signup', function(req, res) {
 
      Config.find({"email": req.body.username}, function (err, config) {   
         if (err) {
-        return res.json({success: false, msg: 'getting config failed when signing up.'});
+        return res.json({success: false, msg: 'getting config failed when signing up. Try again'});
       }
+      if (!config.length){
+        return res.json({success: false, msg: 'Your username is not yet set up.'});
+
+      } else {
 
       var newUser = new User({
       username: req.body.username,
@@ -40,7 +44,7 @@ router.post('/signup', function(req, res) {
       }
       res.json({success: true, msg: 'Successful created new user.', config: config});
     });
-
+}
     });
 
     
@@ -50,7 +54,7 @@ router.post('/signup', function(req, res) {
 });
 
 router.post('/signin', function(req, res) {
-  console.log(req.clientIp);
+  //console.log(req.clientIp);
   User.findOne({
     username: req.body.username
   }, function(err, user) {
@@ -63,14 +67,14 @@ router.post('/signin', function(req, res) {
       user.comparePassword(req.body.password, function (err, isMatch) {
         if (isMatch && !err) {
           if (user.isInactive) {
-            res.status(401).send({success: false, msg: 'Did not comply with 3 sessions.'});
+            res.status(401).send({success: false, msg: 'User Not eligible for more sessions! You did not complete the 3 sessions/week.'});
 
           } else if (user.sessionTimes && new Date() - user.sessionTimes[user.sessionTimes.length -1] < 1000 * 24 * 60 * 60){
-            res.status(401).send({success: false, msg: 'Not enough time passed.'});
+            res.status(401).send({success: false, msg: 'Not 24 hours passed since your last session.'});
           } else if (user.sessionTimes &&  
             user.sessionTimes.length >= (Math.floor((new Date() - new Date(user.experimentStart +'T00:00:01')) / (1000 * 60 * 60 * 24 * 7)) + 1) * 3 ) {
 
-            res.status(401).send({success: false, msg: 'More than 3 sessions/week not allowed.'});
+            res.status(401).send({success: false, msg: 'More than 3 sessions/week is not allowed.'});
 
           } else {
             // if user is found and password is right create a token
@@ -210,7 +214,7 @@ router.put('/updateold', passport.authenticate('jwt', { session: false}), functi
 router.post('/update', passport.authenticate('jwt', { session: false}), function(req, res) {
   var token = getToken(req.headers);
   if (token) {
-    console.log(req.user);
+    //console.log(req.user);
     User.findOne({_id:req.user._id, "statistics.row": req.body.statistics.row}, {"statistics.row.$": true}, function (err, first) { 
         if (err) {
         return res.json({success: false, msg: 'user update failed.'});
@@ -260,7 +264,7 @@ router.post('/update', passport.authenticate('jwt', { session: false}), function
 router.post('/updatePhase', passport.authenticate('jwt', { session: false}), function(req, res) {
   var token = getToken(req.headers);
   if (token) {
-    console.log(req.user);
+    //console.log(req.user);
     User.findOneAndUpdate({_id:req.user._id}, {$set:{phase:req.body.phase}, $push: {sessionTimes: new Date() }},function (err, user) { 
         if (err) {
         return res.json({success: false, msg: 'user update failed.'});
@@ -281,14 +285,14 @@ router.post('/updatePhase', passport.authenticate('jwt', { session: false}), fun
 router.get('/getPhase', passport.authenticate('jwt', { session: false}), function(req, res) {
   var token = getToken(req.headers);
   if (token) {
-    console.log('phase');
+    //console.log('phase');
     User.findOne({_id:req.user._id}, function (err, user) { 
         if (err) {
-          console.log('phase1');
+          //console.log('phase1');
         return res.json({success: false, msg: 'user phase getting failed.'});
       }
       if (user != null){
-        console.log('phase2');
+        //console.log('phase2');
         res.json({success: true, msg: 'Successfully got phase.', phase: user.phase});
     } 
   });
@@ -335,7 +339,7 @@ router.post('/config', function(req, res) {
 router.get('/config', passport.authenticate('jwt', { session: false}), function(req, res) {
   var token = getToken(req.headers);
   if (token) {
-    console.log(req.user);
+    //console.log(req.user);
     Config.find({"email": req.user.username}, function (err, config) {   
         if (err) {
         return res.json({success: false, msg: 'getting config failed.'});
@@ -437,9 +441,9 @@ nodemailer.createTestAccount((err, account) => {
         if (error) {
             return console.log(error);
         }
-        console.log('Message sent: %s', info.messageId);
+        //console.log('Message sent: %s', info.messageId);
         // Preview only available when sending through an Ethereal account
-        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+        //console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
         // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@blurdybloop.com>
         // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
@@ -502,9 +506,9 @@ nodemailer.createTestAccount((err, account) => {
         if (error) {
             return console.log(error);
         }
-        console.log('Message sent: %s', info.messageId);
+        //console.log('Message sent: %s', info.messageId);
         // Preview only available when sending through an Ethereal account
-        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+        //console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
         // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@blurdybloop.com>
         // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...

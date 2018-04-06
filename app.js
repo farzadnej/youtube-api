@@ -21,6 +21,18 @@ var admin = require('./routes/admin');
 
 var app = express();
 
+
+//force https
+function forceHttps(req, res, next){
+  if(req.secure){
+    // OK, continue
+    return next();
+  };
+  res.redirect('https://'+req.hostname+req.url); // handle port numbers if non 443
+};
+
+app.use(forceHttps);
+
 require('./scheduler/schedule');
 
 // view engine setup
@@ -58,13 +70,13 @@ app.use(zip());
 app.use('/api', api);
 app.use('/admin', admin);
 
-/* temporarily disable for development
+//temporarily disable for development
 app.use(express.static(path.join(__dirname, 'dist')));
 // Catch all other routes and return the index file
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
-*/
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

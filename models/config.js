@@ -23,6 +23,9 @@ var configSchema = mongoose.Schema({
 	video: {
 		type: String,
 	},
+	startSessionQuestionaire: {
+		type: String,
+	},
 	sessionQuestionaire: {
 		type: String,
 	},

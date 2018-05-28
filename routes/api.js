@@ -144,122 +144,6 @@ router.post('/updatepass', function(req, res) {
 
 });
 
-router.post('/book', passport.authenticate('jwt', { session: false}), function(req, res) {
-  var token = getToken(req.headers);
-  if (token) {
-    console.log(req.body);
-    var newBook = new Book({
-      title: req.body.title
-    });
-
-    newBook.save(function(err) {
-      if (err) {
-        return res.json({success: false, msg: 'Save book failed.'});
-      }
-      res.json({success: true, msg: 'Successful created new book.'});
-    });
-  } else {
-    return res.status(403).send({success: false, msg: 'Unauthorized.'});
-  }
-});
-
-
-
-router.post('/updateold', passport.authenticate('jwt', { session: false}), function(req, res) {
-  var token = getToken(req.headers);
-  if (token) {
-    console.log(req.user);
-    //var eybaba = {row:"5", blockQuestionaire:"5PP",vidQuestionaire:'55PP',SessionQuestionaire:'555'};
-   //User.findOneAndUpdate({_id:req.user._id, "statistics.row": req.body.statistics.row }, {$push: {"statistics.$": req.body.statistics}}, {new: true, upsert: true}, function (err, user) {
-   User.findOneAndUpdate({_id:req.user._id}, {$push: {"statistics": req.body.statistics}}, {new: true, upsert: true}, function (err, user) { 
-        
-        if (err) {
-        return res.json({success: false, msg: 'adding row failed.'});
-      }
-      res.json({success: true, msg: 'Successfully added row.', user: user});
-    });
-  } else {
-    return res.status(403).send({success: false, msg: 'Unauthorized.'});
-  }
-
-    });
-
-
-
-
-
-
-router.put('/updateold', passport.authenticate('jwt', { session: false}), function(req, res) {
-  var token = getToken(req.headers);
-  if (token) {
-    console.log(req.user);
-    //var eybaba = {row:"5", blockQuestionaire:"5PP",vidQuestionaire:'55PP',SessionQuestionaire:'555'};
-   //User.findOneAndUpdate({_id:req.user._id, "statistics.row": req.body.statistics.row }, {$push: {"statistics.$": req.body.statistics}}, {new: true, upsert: true}, function (err, user) {
-   // W User.findOneAndUpdate({_id:req.user._id}, {$push: {"statistics": eybaba}}, {new: true, upsert: true}, function (err, user) { 
-   //working User.findOneAndUpdate({_id:req.user._id, "statistics.row": eybaba.row}, {$set: {"statistics.$.blockQuestionaire": eybaba.blockQuestionaire}}, {new: true, upsert: true}, function (err, user) { 
-    //User.findOneAndUpdate({_id:req.user._id, "statistics.row": eybaba.row}, {$set: {"statistics.$": eybaba}}, {new: true, upsert: true}, function (err, user) {    
-     User.findOneAndUpdate({_id:req.user._id, "statistics.row": req.body.statistics.row}, {$set: {"statistics.$": req.body.statistics}}, {new: true, upsert: true}, function (err, user) {   
-        if (err) {
-        return res.json({success: false, msg: 'user update failed.'});
-      }
-      res.json({success: true, msg: 'Successfully updated user.', user: user});
-    });
-  } else {
-    return res.status(403).send({success: false, msg: 'Unauthorized.'});
-  }
-
-    });
-
-
-router.post('/update', passport.authenticate('jwt', { session: false}), function(req, res) {
-  var token = getToken(req.headers);
-  if (token) {
-    //console.log(req.user);
-    User.findOne({_id:req.user._id, "statistics.row": req.body.statistics.row}, {"statistics.row.$": true}, function (err, first) { 
-        if (err) {
-        return res.json({success: false, msg: 'user update failed.'});
-      }
-      if (first != null){
-        temp = first.statistics;
-        bufferAlaki = temp[0];
-        buffer = Object.assign(bufferAlaki.toObject(),req.body.statistics);
-        User.findOneAndUpdate({_id:req.user._id, "statistics.row": req.body.statistics.row}, {$set: {"statistics.$": buffer}}, {new: true, upsert: true}, function (err, second) {   
-        if (err) {
-        return res.json({success: false, msg: 'user update failed.'});
-      }
-      res.json({success: true, msg: 'Successfully updated user.', second: second});
-    });
-
-      } else{
-        buffer = Object.assign({},req.body.statistics);
-        User.findOneAndUpdate({_id:req.user._id}, {$push: {"statistics": req.body.statistics}}, {new: true, upsert: true}, function (err, newRow) { 
-        
-        if (err) {
-        return res.json({success: false, msg: 'adding row failed.'});
-      }
-      hala = Object.assign({},newRow.toObject());
-      res.json({success: true, msg: 'Successfully added row.', newRow: hala});
-    });
-
-      }
-      });
-      //buffer.searchTerm = req.body.statistics.searchTerm;
-      /*Object.keys(req.body.statistics).forEach(function(key) {
-        var reqHolder = req.body.statistics;
-        if (reqHolder[key] !== null) {
-          buffer[key] = reqHolder[key];
-        }
-      });*/
-    
-     
-  } else {
-    return res.status(403).send({success: false, msg: 'Unauthorized.'});
-  }
-
-    });
-
-
-
 
 router.post('/updatePhase', passport.authenticate('jwt', { session: false}), function(req, res) {
   var token = getToken(req.headers);
@@ -403,12 +287,54 @@ router.get('/questionaire', passport.authenticate('jwt', { session: false}),func
 
 
 
-/*router.get('/questionaire', function(req, res) {
-  
-    console.log(req);
-    //console.log(req.user.qType);
+router.post('/update', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    //console.log(req.user);
+    User.findOne({_id:req.user._id, "statistics.row": req.body.statistics.row}, {"statistics.row.$": true}, function (err, first) { 
+        if (err) {
+        return res.json({success: false, msg: 'user update failed.'});
+      }
+      if (first != null){
+        temp = first.statistics;
+        bufferAlaki = temp[0];
+        buffer = Object.assign(bufferAlaki.toObject(),req.body.statistics);
+        User.findOneAndUpdate({_id:req.user._id, "statistics.row": req.body.statistics.row}, {$set: {"statistics.$": buffer}}, {new: true, upsert: true}, function (err, second) {   
+        if (err) {
+        return res.json({success: false, msg: 'user update failed.'});
+      }
+      res.json({success: true, msg: 'Successfully updated user.', second: second});
+    });
+
+      } else{
+        buffer = Object.assign({},req.body.statistics);
+        User.findOneAndUpdate({_id:req.user._id}, {$push: {"statistics": req.body.statistics}}, {new: true, upsert: true}, function (err, newRow) { 
+        
+        if (err) {
+        return res.json({success: false, msg: 'adding row failed.'});
+      }
+      hala = Object.assign({},newRow.toObject());
+      res.json({success: true, msg: 'Successfully added row.', newRow: hala});
+    });
+
+      }
+      });
+      //buffer.searchTerm = req.body.statistics.searchTerm;
+      //Object.keys(req.body.statistics).forEach(function(key) {
+        //var reqHolder = req.body.statistics;
+        //if (reqHolder[key] !== null) {
+          //buffer[key] = reqHolder[key];
+        //}
+      //});
     
-    });*/
+     
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+
+    });
+
+
 
 
 router.get('/reset', function(req, res) {
@@ -422,8 +348,8 @@ nodemailer.createTestAccount((err, account) => {
     let transporter = nodemailer.createTransport({
  service: 'gmail',
  auth: {
-        user: 'peter.hartoo17@gmail.com',
-        pass: 'qwertyuiop9'
+        user: 'imlresearchuoft@gmail.com',
+        pass: 'Markchignell'
     }
 });
 
@@ -458,21 +384,6 @@ nodemailer.createTestAccount((err, account) => {
 
 
 
-router.get('/book', passport.authenticate('jwt', { session: false}), function(req, res) {
-  var token = getToken(req.headers);
-  console.log(token);
-  console.log('req', req.user);
-  if (token) {
-    Book.find(function (err, books) {
-      if (err) return next(err);
-      //res.send('It worked! User id is: ' + req.user._id + '.');
-      res.json(books);
-    });
-  } else {
-    return res.status(403).send({success: false, msg: 'Unauthorized.'});
-  }
-});
-
 
 
 sendResetEmail = function(randID, to) {
@@ -486,16 +397,16 @@ nodemailer.createTestAccount((err, account) => {
     let transporter = nodemailer.createTransport({
  service: 'gmail',
  auth: {
-        user: 'peter.hartoo17@gmail.com',
-        pass: 'qwertyuiop9'
+        user: 'imlresearchuoft@gmail.com',
+        pass: 'Markchignell'
     }
 });
 
     // setup email data with unicode symbols
     let mailOptions = {
-        from: '"Crowd Sourcing" <peter.hartoo17@gmail.com>', // sender address
+        from: '"YouTube IML Experiment" <imlresearchuoft@gmail.com>', // sender address
         to: to, // list of receivers
-        subject: 'CrowdSourcing Password Reset', // Subject line
+        subject: 'YouTube IML Experiment Password Reset', // Subject line
         text: 'Click:' + 'http://localhost:4200/password-update/'+ randID.toString(), // plain text body
         html: 'Click the link to reset your password: <br>  <a href=' +
         'http://www.imlresearch.com/password-update/'+ randID + '>password reset link</a> <br>  <b>Thanks</b>'// html body
@@ -533,3 +444,92 @@ getToken = function (headers) {
 };
 
 module.exports = router;
+
+
+
+/*
+router.post('/book', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    console.log(req.body);
+    var newBook = new Book({
+      title: req.body.title
+    });
+
+    newBook.save(function(err) {
+      if (err) {
+        return res.json({success: false, msg: 'Save book failed.'});
+      }
+      res.json({success: true, msg: 'Successful created new book.'});
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+
+
+router.post('/updateold', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    console.log(req.user);
+    //var eybaba = {row:"5", blockQuestionaire:"5PP",vidQuestionaire:'55PP',SessionQuestionaire:'555'};
+   //User.findOneAndUpdate({_id:req.user._id, "statistics.row": req.body.statistics.row }, {$push: {"statistics.$": req.body.statistics}}, {new: true, upsert: true}, function (err, user) {
+   User.findOneAndUpdate({_id:req.user._id}, {$push: {"statistics": req.body.statistics}}, {new: true, upsert: true}, function (err, user) { 
+        
+        if (err) {
+        return res.json({success: false, msg: 'adding row failed.'});
+      }
+      res.json({success: true, msg: 'Successfully added row.', user: user});
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+
+    });
+
+
+
+
+
+
+router.put('/updateold', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    console.log(req.user);
+    //var eybaba = {row:"5", blockQuestionaire:"5PP",vidQuestionaire:'55PP',SessionQuestionaire:'555'};
+   //User.findOneAndUpdate({_id:req.user._id, "statistics.row": req.body.statistics.row }, {$push: {"statistics.$": req.body.statistics}}, {new: true, upsert: true}, function (err, user) {
+   // W User.findOneAndUpdate({_id:req.user._id}, {$push: {"statistics": eybaba}}, {new: true, upsert: true}, function (err, user) { 
+   //working User.findOneAndUpdate({_id:req.user._id, "statistics.row": eybaba.row}, {$set: {"statistics.$.blockQuestionaire": eybaba.blockQuestionaire}}, {new: true, upsert: true}, function (err, user) { 
+    //User.findOneAndUpdate({_id:req.user._id, "statistics.row": eybaba.row}, {$set: {"statistics.$": eybaba}}, {new: true, upsert: true}, function (err, user) {    
+     User.findOneAndUpdate({_id:req.user._id, "statistics.row": req.body.statistics.row}, {$set: {"statistics.$": req.body.statistics}}, {new: true, upsert: true}, function (err, user) {   
+        if (err) {
+        return res.json({success: false, msg: 'user update failed.'});
+      }
+      res.json({success: true, msg: 'Successfully updated user.', user: user});
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+
+    });
+
+
+
+
+
+router.get('/book', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  console.log(token);
+  console.log('req', req.user);
+  if (token) {
+    Book.find(function (err, books) {
+      if (err) return next(err);
+      //res.send('It worked! User id is: ' + req.user._id + '.');
+      res.json(books);
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+*/

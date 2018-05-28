@@ -143,6 +143,50 @@ var UserSchema = new Schema({
             type: Date,
             default: Date.now
     },
+        startQ1: {
+            type: String,
+           default: ""
+        },
+        startQ2: {
+            type: String,
+           default: ""
+        },
+        startQ3: {
+          type: String,
+           default: ""
+        },
+        startQ4: {
+          type: String,
+           default: ""
+        },
+        startQ5: {
+          type: String,
+           default: ""
+        },
+        startQ6: {
+          type: String,
+           default: ""
+        },
+        startQ7: {
+          type: String,
+           default: ""
+        },
+        startQ8: {
+          type: String,
+           default: ""
+        },
+        startQ9: {
+          type: String,
+           default: ""
+        },
+        startQ10: {
+          type: String,
+           default: ""
+        },
+        startQduration: {
+            type: String,
+           default: ""
+        },
         videoQ1: {
             type: String,
            default: ""

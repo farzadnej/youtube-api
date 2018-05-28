@@ -5,8 +5,8 @@ const nodemailer = require('nodemailer');
 let transporter = nodemailer.createTransport({
  service: 'gmail',
  auth: {
-        user: 'peter.hartoo17@gmail.com',
-        pass: 'qwertyuiop9'
+        user: 'imlresearchuoft@gmail.com',
+        pass: 'Markchignell'
     }
 });
 
@@ -78,7 +78,7 @@ function mondayEmail(user){
 
     // setup email data with unicode symbols
     let mailOptions = {
-        from: '"Youtube Experiment" <farzad85@yahoo.com>', // sender address
+        from: '"Youtube Experiment" <imlresearchuoft@gmail.com>', // sender address
         to: user, // list of receivers
         subject: 'Reminder ✔', // Subject line
         text: 'you are eligible to start the 3 trials in this week.', // plain text body
@@ -111,11 +111,11 @@ function wedAndThursEmail(user){
 
     // setup email data with unicode symbols
     let mailOptions = {
-        from: '"Youtube Experiment" <farzad85@yahoo.com>', // sender address
+        from: '"Youtube Experiment Reminder" <imlresearchuoft@gmail.com>', // sender address
         to: user, // list of receivers
         subject: 'Reminder ✔', // Subject line
-        text: 'y.', // plain text body
-        html: '<b>you have not started your experiment, yet. Please do so ASAP.</b>' // html body
+        text: 'This is not important.', // plain text body
+        html: 'Hello, <br> <br>This is a reminder that <b>you have not yet started your next session. </b> Please make sure you complete it as soon as possible.<br><br><br>Thanks'
     };
 
     // send mail with defined transport object

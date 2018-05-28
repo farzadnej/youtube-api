@@ -31,7 +31,9 @@ function forceHttps(req, res, next){
   res.redirect('https://'+req.hostname+req.url); // handle port numbers if non 443
 };
 
-app.use(forceHttps);
+
+//disable for testing locally
+//app.use(forceHttps);
 
 require('./scheduler/schedule');
 

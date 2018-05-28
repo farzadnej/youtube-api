@@ -11,6 +11,9 @@ var questionaireSchema = mongoose.Schema({
 	question: {
 		type: String,
 	},
+	textarea: {
+		type: String,
+	},
 	a: {
 		type: String,
 	},

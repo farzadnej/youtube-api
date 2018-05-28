@@ -16,6 +16,13 @@ router.get('/config', function(req, res, next) {
 	res.sendFile(path.join(__dirname, '../views', 'config.html'));
 });
 
+
+/* GET users listing. */
+router.get('/erase', function(req, res, next) {
+  //res.sendFile('../views/config.html' , { root : __dirname});
+  res.sendFile(path.join(__dirname, '../views', 'erase.html'));
+});
+
 router.get('/questionaire', function(req, res, next) {
   res.sendFile(path.join(__dirname, '../views', 'questionaire.html'));
 });
@@ -50,6 +57,17 @@ router.get('/csvfiles', function(req, res, next) {
   'quality',
   'videoUrl',
   'videoDuration',
+  'startQ1',
+  'startQ2',
+  'startQ3',
+  'startQ4',
+  'startQ5',
+  'startQ6',
+  'startQ7',
+  'startQ8',
+  'startQ9',
+  'startQ10',
+  'startQduration',
   'videoQ1',
   'videoQ2',
   'videoQ3',

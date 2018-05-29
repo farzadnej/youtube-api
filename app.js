@@ -22,7 +22,7 @@ var admin = require('./routes/admin');
 var app = express();
 
 
-force https
+//force https
 function forceHttps(req, res, next){
   if(req.secure){
     // OK, continue
@@ -33,7 +33,7 @@ function forceHttps(req, res, next){
 
 
 //disable for testing locally
-//app.use(forceHttps);
+app.use(forceHttps);
 
 require('./scheduler/schedule');
 

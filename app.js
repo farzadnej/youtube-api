@@ -22,7 +22,7 @@ var admin = require('./routes/admin');
 var app = express();
 
 
-//force https
+force https
 function forceHttps(req, res, next){
   if(req.secure){
     // OK, continue

@@ -16,6 +16,12 @@ router.get('/config', function(req, res, next) {
 	res.sendFile(path.join(__dirname, '../views', 'config.html'));
 });
 
+/* GET users listing. */
+router.get('/activateuser', function(req, res, next) {
+  //res.sendFile('../views/config.html' , { root : __dirname});
+  res.sendFile(path.join(__dirname, '../views', 'activateuser.html'));
+});
+
 
 /* GET users listing. */
 router.get('/erase', function(req, res, next) {

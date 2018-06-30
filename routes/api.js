@@ -116,6 +116,33 @@ router.post('/resetpass', function(req, res) {
   });
             });
 
+
+
+
+
+router.post('/sendSessionEmail', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    //console.log(req.user);
+    User.findOne({_id:req.user._id},function (err, user) { 
+        if (err) {
+        return res.json({success: false, msg: 'session email failed.'});
+      }
+      if (user != null){
+        var remainingSessions = calcSessionsLeft(user);
+        sendSessionEmail(remainingSessions, user.username);
+        res.json({success: true, msg: 'Successfully sent email.'});
+    } 
+  });
+  }
+  else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+
+    });
+
+
+
 router.post('/updatepass', function(req, res) {
  
 
@@ -235,6 +262,21 @@ router.get('/config', passport.authenticate('jwt', { session: false}), function(
   }
 
     });
+
+
+router.post('/activateuser', function(req, res) {
+  User.findOneAndUpdate({username:req.body.username}, {$set:{isInactive: false}},function (err, user) { 
+        if (err) {
+        return res.json({success: false, msg: 'could not activate user.'});
+      }
+      if (user != null){
+        res.json({success: true, msg: 'Successfully activated user.'});
+    } else {
+      res.json({success: false, msg: 'No such user.'});
+    }
+  });
+            });
+
 
 
 
@@ -427,6 +469,60 @@ nodemailer.createTestAccount((err, account) => {
 });
 };
 
+
+
+calcSessionsLeft = function(user){
+
+  if ((user.sessionTimes.length % 3) !== 0 ){
+
+    var remainingSessions = 3 - (user.sessionTimes.length % 3);
+  } else {
+    var remainingSessions = 0;
+  }
+  return remainingSessions        
+
+}
+
+sendSessionEmail = function(remainingSessions, to) {
+
+
+// Generate test SMTP service account from ethereal.email
+// Only needed if you don't have a real mail account for testing
+nodemailer.createTestAccount((err, account) => {
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+ service: 'gmail',
+ auth: {
+        user: 'imlresearchuoft@gmail.com',
+        pass: 'Markchignell'
+    }
+});
+
+    // setup email data with unicode symbols
+    let mailOptions = {
+        from: '"Youtube Experiment" <imlresearchuoft@gmail.com>', // sender address
+        to: to, // list of receivers
+        subject: 'Session Complete', // Subject line
+        text: 'Not important.', // plain text body
+        html: '<b>You have completed this session and you would have '+ remainingSessions +
+        ' sessions left in this week. <br> You can log back in in 24 hours in order to finish them (if you have sessions left for this week).<br> Thanks.</b>' // html body
+    };
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+        }
+        //console.log('Message sent: %s', info.messageId);
+        // Preview only available when sending through an Ethereal account
+        //console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
+        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@blurdybloop.com>
+        // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+    });
+});
+};
 
 
 

@@ -35,6 +35,8 @@ router.get('/questionaire', function(req, res, next) {
 
 router.get('/stats', function(req, res, next) {
 	//res.sendFile('../views/config.html' , { root : __dirname});
+  // IMPORTANT FOR PRODUCTION
+  //fse.emptyDirSync('../temp/csvexport');
 	fse.emptyDirSync('temp/csvexport');
 	res.sendFile(path.join(__dirname, '../views', 'stats.html'));
 });
@@ -139,6 +141,8 @@ router.get('/csvfiles', function(req, res, next) {
     
 
 	  var csv = json2csv({ data: stats, fields: fields });
+    // IMPORTANT FOR PRODUCTION
+    //const fileam = '../temp/csvexport/'+user[0].username +'.csv';
 	  const fileam = 'temp/csvexport/'+user[0].username +'.csv';
 	  fse.outputFileSync(fileam, csv);
 
@@ -148,7 +152,8 @@ router.get('/csvfiles', function(req, res, next) {
     });
 
            }
-
+          // IMPORTANT FOR PRODUCTION
+          //setTimeout(zipFiles, 10000);
           setTimeout(zipFiles, 5000);
 
           function zipFiles(){

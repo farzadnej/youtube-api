@@ -33,7 +33,7 @@ function forceHttps(req, res, next){
 
 
 //disable for testing locally
-app.use(forceHttps);
+//app.use(forceHttps);
 
 require('./scheduler/schedule');
 

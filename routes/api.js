@@ -78,7 +78,13 @@ router.post('/signin', function(req, res) {
 
           } else {
             // if user is found and password is right create a token
-            var token = jwt.sign(user, config.secret);
+            var shorten_user = {_doc:{}};
+            shorten_user.username = user.username;
+            shorten_user.password = user.password;
+            shorten_user._id = user._id; 
+            shorten_user._doc._id = user._doc._id;
+            var token = jwt.sign(shorten_user, config.secret);
+            //var token = jwt.sign(user, config.secret);
             // return the information including token as JSON
             res.json({success: true, token: 'JWT ' + token, ip: req.clientIp});
             
